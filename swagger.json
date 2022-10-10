@@ -1,0 +1,363 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+      "title": "Swagger User auth - OpenAPI 3.0",
+      "description": "This is a simpple user authentication service.",
+      "contact": {
+        "email": "rafael.ssilva@hotmail.com"
+      },
+      "version": "1.0.0"
+    },
+    "externalDocs": {
+      "description": "Find out more about Swagger",
+      "url": "http://swagger.io"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:3000"
+      }
+    ],
+    "tags": [
+      {
+        "name": "users",
+        "description": "Operations about user"
+      },
+      {
+        "name": "sessions",
+        "description": "Authenticate the user"
+      }
+    ],
+    "paths": {
+      "/sessions": {
+        "post": {
+          "tags": [
+            "sessions"
+          ],
+          "summary": "Authenticate",
+          "description": "Authenticates the user.",
+          "operationId": "AuthUser",
+          "requestBody": {
+            "description": "Authenticates the user Object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Userauth"
+                }
+              }
+            }
+          },
+          "responses": {
+            "default": {
+              "description": "successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                },
+                "application/xml": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/users": {
+        "post": {
+          "tags": [
+            "users"
+          ],
+          "summary": "Create user",
+          "description": "Creates a new user.",
+          "operationId": "createUser",
+          "requestBody": {
+            "description": "Created user object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Usercreate"
+                }
+              }
+            }
+          },
+          "responses": {
+            "default": {
+              "description": "successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                },
+                "application/xml": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "get": {
+          "tags": [
+            "users"
+          ],
+          "summary": "List all users",
+          "description": "This can only be done by the logged in user",
+          "operationId": "listUsers",
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                },
+                "application/xml": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "put": {
+          "tags": [
+            "users"
+          ],
+          "summary": "Update user",
+          "description": "This can only be done by the logged in user.",
+          "operationId": "updateUser",
+          "requestBody": {
+            "description": "Update an existent user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Userupdate"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Userupdate"
+                }
+              },
+              "application/x-www-form-urlencoded": {
+                "schema": {
+                  "$ref": "#/components/schemas/Userupdate"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                },
+                "application/xml": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      },
+      "/users/{id}": {
+        "get": {
+          "tags": [
+            "users"
+          ],
+          "summary": "Get an user by id",
+          "description": "Must be logged in",
+          "operationId": "getUser",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "The user id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "headers": {
+                "X-Rate-Limit": {
+                  "description": "calls per hour allowed by the user",
+                  "schema": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                },
+                "X-Expires-After": {
+                  "description": "date in UTC when token expires",
+                  "schema": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              },
+              "content": {
+                "application/xml": {
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                "application/json": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid username/password supplied"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "User": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "lkj123lk1j23lkj12kj3"
+            },
+            "first_name": {
+              "type": "string",
+              "example": "Rafael"
+            },
+            "last_name": {
+              "type": "string",
+              "example": "Santos"
+            },
+            "email": {
+              "type": "string",
+              "example": "rafael@email.com"
+            },
+            "password": {
+              "type": "string",
+              "example": "12345@pass"
+            }
+          },
+          "xml": {
+            "name": "user"
+          }
+        },
+        "Usercreate": {
+          "type": "object",
+          "properties": {
+            "first_name": {
+              "type": "string",
+              "example": "Rafael"
+            },
+            "last_name": {
+              "type": "string",
+              "example": "Santos"
+            },
+            "email": {
+              "type": "string",
+              "example": "rafael@email.com"
+            },
+            "password": {
+              "type": "string",
+              "example": "12345@pass"
+            }
+          },
+          "xml": {
+            "name": "Usercreate"
+          }
+        },
+        "Userupdate": {
+          "type": "object",
+          "properties": {
+            "first_name": {
+              "type": "string",
+              "example": "Rafael"
+            },
+            "last_name": {
+              "type": "string",
+              "example": "Santos"
+            },
+            "email": {
+              "type": "string",
+              "example": "rafael@email.com"
+            },
+            "password": {
+              "type": "string",
+              "example": "12345@pass"
+            },
+            "old_password": {
+              "type": "string",
+              "example": "12345@pass"
+            }
+          },
+          "xml": {
+            "name": "Userupdate"
+          }
+        },
+        "Userauth": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "example": "rafael@email.com"
+            },
+            "password": {
+              "type": "string",
+              "example": "12345@pass"
+            }
+          },
+          "xml": {
+            "name": "Userupdate"
+          }
+        }
+      },
+      "requestBodies": {
+        "UserArray": {
+          "description": "List of user object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      },
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    },
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ]
+  }
