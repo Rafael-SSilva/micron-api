@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+  #runs postgres service
+  db:
+    image: postgres:latest
+    container_name: postgres
+    restart: always
+    ports:
+      - ${DB_PORT}:5432
+    env_file:
+      - .env
+  
+  #runs the API service
+  node_api:
+    build: . #uses the dev.Dockerfile to define the service
+    ports:
+      - ${APP_PORT}:3000 #Maps the local machine port to the container port 3000
+    volumes:
+      - .:/usr/src/app #listen to the changes on the container while developing
+    env_file:
+      - .env
+    depends_on:
+      - db #The API services will start after the postgres service
